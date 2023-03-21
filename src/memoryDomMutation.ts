@@ -22,7 +22,7 @@ const createMemoryDomMutation = (): MemoryDomMutation => {
       const parentChildren = (parent as MemoryDomElement<any>).children;
       if (after) {
         const index = parentChildren.findIndex((child) => child === after);
-        (parent as MemoryDomElement<any>).children = [...parentChildren.filter((child, i) => i <= index), newElement, ...parentChildren.filter((child, i) => i > index)]
+        (parent as MemoryDomElement<any>).children = [...parentChildren.filter((_child, i) => i <= index), newElement, ...parentChildren.filter((_child, i) => i > index)]
       } else {
         (parent as MemoryDomElement<any>).children = [newElement, ...parentChildren];
       }
@@ -32,7 +32,7 @@ const createMemoryDomMutation = (): MemoryDomMutation => {
         const parentChildren = (element.parent as MemoryDomElement<any>).children;
         element.parent && ((element.parent as MemoryDomElement<any>).children = parentChildren.filter(child => child !== element));
     },
-    update: <T extends DomELementType>(element: DomElement, prevProps: Props<T>, nextProps: Props<T>) => {
+    update: <T extends DomELementType>(element: DomElement, _prevProps: Props<T>, nextProps: Props<T>) => {
         (element as MemoryDomElement<any>).props = nextProps;
     },
     renderToString: () => {

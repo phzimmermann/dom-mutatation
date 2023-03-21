@@ -1,4 +1,4 @@
-import createMemoryDomMutation, { MemoryDomElement, MemoryDomMutation } from "../memoryDomMutation";
+import createMemoryDomMutation, { MemoryDomElement } from "../memoryDomMutation";
 
 describe("memoryDomMutation", () => {
   test("creates a root", () => {
@@ -14,7 +14,7 @@ describe("memoryDomMutation", () => {
   test("adds stuff to root", () => {
     const domMutation = createMemoryDomMutation();
     const child1 = domMutation.add(domMutation.getRoot(), null, 'div', {})
-    const child2 = domMutation.add(domMutation.getRoot(), child1, 'text', { text: 'blah' });
+    domMutation.add(domMutation.getRoot(), child1, 'text', { text: 'blah' });
 
     expect((domMutation.getRoot() as MemoryDomElement<'root'>).children).toEqual(
         [
@@ -37,7 +37,7 @@ describe("memoryDomMutation", () => {
   test("removes child", () => {
     const domMutation = createMemoryDomMutation();
     const child1 = domMutation.add(domMutation.getRoot(), null, 'div', {})
-    const child2 = domMutation.add(domMutation.getRoot(), child1, 'text', { text: 'blah' });
+    domMutation.add(domMutation.getRoot(), child1, 'text', { text: 'blah' });
 
     domMutation.remove(child1);
 
@@ -81,7 +81,7 @@ describe("memoryDomMutation", () => {
   test("render to string", () => {
     const domMutation = createMemoryDomMutation();
     const child1 = domMutation.add(domMutation.getRoot(), null, 'div', { style: { borderLeft: 'pink solid 1px' }, title: "100%", onClick: () => {} })
-    const child2 = domMutation.add(child1, null, 'text', { text: 'test-text'});
+    domMutation.add(child1, null, 'text', { text: 'test-text'});
 
     expect(domMutation.renderToString()).toBe("<div title=\"100%\" style=\"border-left:pink solid 1px;\">test-text</div>")
   });

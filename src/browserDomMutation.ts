@@ -50,7 +50,7 @@ type UknownProps = Record<string, any>;
 
 const isProperty = (key: string) => key !== "children" && !isEvent(key);
 const isNew = (prev: UknownProps, next: UknownProps) => (key: string) => prev[key as keyof UknownProps] !== next[key as keyof UknownProps];
-const isGone = (prev: UknownProps, next: UknownProps) => (key: string) => !(key in next);
+const isGone = (_prev: UknownProps, next: UknownProps) => (key: string) => !(key in next);
 
 const updateProps = (dom: HTMLElement, prevProps: UknownProps, nextProps: UknownProps) => {
     Object.keys(prevProps)
