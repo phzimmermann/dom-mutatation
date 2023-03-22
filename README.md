@@ -16,7 +16,7 @@ const domMutation = createBrowserMutation(root);
 
 ### MemoryMutation
 
-```
+``` typescript
 import { createMemoryMutation } from "dom-mutation";
 
 const domMutation = createMemoryMutation();
@@ -24,20 +24,20 @@ const domMutation = createMemoryMutation();
 
 ## Add elements to the dom
 
-```
+``` typescript
 const divElement = domMutation.add(domMutation.getRoot(), null, 'div', { style: { color: 'blue' } })
 const txtElement = domMutation.add(divElement, null, 'text', { text: 'Hello World' })
 ```
 
 ## Remove elements:
 Pass the pointer to the element you want to delete to the DomMutation.
-```
+``` typescript
 domMutation.remove(element);
 ```
 
 ## Update elements:
 To update elements, you need to store the previous props somewhere.
-```
+``` typescript
 domMutation.update(
   element, // whatever you receive from domMutation.add(...)
   prevProps, // props that you sent the last time, it's your job to trigger this update function and to store the last props.
