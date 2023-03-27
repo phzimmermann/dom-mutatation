@@ -1,5 +1,5 @@
 import { DomElement, DomELementType, DomMutation, Props } from "./domMutation";
-import { isEvent, styleToText } from "./utils";
+import { getGoneProps, getNewOrChanged, isEvent, isNew, styleToText, UnknownProps } from "./utils";
 
 type BrowserDomElement = DomElement & {
     dom: HTMLElement;
@@ -46,13 +46,12 @@ const createHtmlNode = <T extends DomELementType>(parentDom: HTMLElement, after:
     return dom;
 }
 
-type UknownProps = Record<string, any>;
+const updateProps = (dom: HTMLElement, prevProps: UnknownProps, nextProps: UnknownProps) => {
+    if ('text' in prevProps || 'text' in nextProps) {
+      dom.nodeValue = nextProps.text;
+      return;
+    }
 
-const isProperty = (key: string) => key !== "children" && !isEvent(key);
-const isNew = (prev: UknownProps, next: UknownProps) => (key: string) => prev[key as keyof UknownProps] !== next[key as keyof UknownProps];
-const isGone = (_prev: UknownProps, next: UknownProps) => (key: string) => !(key in next);
-
-const updateProps = (dom: HTMLElement, prevProps: UknownProps, nextProps: UknownProps) => {
     Object.keys(prevProps)
     .filter(isEvent)
     .filter((key) => !(key in nextProps) || isNew(prevProps, nextProps)(key))
@@ -62,18 +61,14 @@ const updateProps = (dom: HTMLElement, prevProps: UknownProps, nextProps: Uknown
     });
 
   // Remove old properties
-  Object.keys(prevProps)
-    .filter(isProperty)
-    .filter(isGone(prevProps, nextProps))
+  getGoneProps(prevProps, nextProps)
     .forEach((name) => {
         // @ts-ignore
       dom[name] = "";
     });
 
   // Set new or changed properties
-  Object.keys(nextProps)
-    .filter(isProperty)
-    .filter(isNew(prevProps, nextProps))
+  getNewOrChanged(prevProps, nextProps)
     .forEach((name) => {
       if (name === "style") {
         // update style

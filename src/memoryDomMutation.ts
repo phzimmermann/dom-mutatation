@@ -1,5 +1,5 @@
 import { DomElement, DomELementType, DomMutation, Props } from "./domMutation";
-import { isEvent, styleToText, transformDomStyle } from "./utils";
+import { getGoneProps, getNewOrChanged, isEvent, styleToText, transformDomStyle } from "./utils";
 
 export interface MemoryDomElement<T extends DomELementType> extends DomElement {
     children: MemoryDomElement<any>[];
@@ -32,8 +32,15 @@ const createMemoryDomMutation = (): MemoryDomMutation => {
         const parentChildren = (element.parent as MemoryDomElement<any>).children;
         element.parent && ((element.parent as MemoryDomElement<any>).children = parentChildren.filter(child => child !== element));
     },
-    update: <T extends DomELementType>(element: DomElement, _prevProps: Props<T>, nextProps: Props<T>) => {
-        (element as MemoryDomElement<any>).props = nextProps;
+    update: <T extends DomELementType>(element: DomElement, prevProps: Props<T>, nextProps: Props<T>) => {
+      const calculatedProps = {...(element as MemoryDomElement<any>).props };
+      getGoneProps(prevProps, nextProps).forEach(name => {
+        delete calculatedProps[name];
+      });
+      getNewOrChanged(prevProps, nextProps).forEach((name) => {
+        calculatedProps[name] = nextProps[name as keyof Props<T>]
+      });
+        (element as MemoryDomElement<any>).props = calculatedProps;
     },
     renderToString: () => {
         return root.children.map(renderElement).join("")

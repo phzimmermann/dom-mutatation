@@ -36,5 +36,5 @@
 //     mutation.remove(div)
 // }, 6000);
 
-export { default as browserDomMutation } from './browserDomMutation';
-export { default as memoryDomMutation } from './memoryDomMutation';
+export { default as createBrowserDomMutation } from './browserDomMutation';
+export { default as createMemoryDomMutation } from './memoryDomMutation';
